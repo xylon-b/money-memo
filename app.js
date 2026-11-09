@@ -24,31 +24,15 @@ const AUTO_RULES = [
   ['저축·투자', ['적금', '청약', '저축', '투자', '연금', 'isa']],
 ];
 
+// 개인 데이터는 공개 코드에 넣지 않음. 처음엔 빈 상태로 시작하고 백업 파일로 불러옴.
 function seedData() {
-  const pid = 'pf-uncle';
-  let n = 0;
-  const tx = (o) => ({ id: 'tx-seed-' + (++n), pid, date: '', asset: '', qty: 0, amount: 0, broker: '', memo: '', ...o });
   return {
     version: 1,
     categories: DEFAULT_CATEGORIES.map((c) => ({ ...c })),
-    fixed: [
-      { id: 'fx-1', name: '월세', amount: 170000, cycle: 'monthly', categoryId: null, memo: '' },
-      { id: 'fx-2', name: 'AI구독 클로드프로', amount: 29000, cycle: 'monthly', categoryId: null, memo: '' },
-    ],
-    portfolios: [
-      { id: pid, name: '아저씨 1천만원', note: '아저씨께 받은 1,000만원이 어떻게 굴러가는지 따로 보는 묶음' },
-    ],
-    tx: [
-      tx({ type: 'deposit', amount: 10000000, memo: '아저씨께 받은 돈' }),
-      tx({ type: 'buy', asset: 'QQQM', qty: 10, amount: 3600000, broker: '토스증권', memo: '2,500달러' }),
-      tx({ type: 'buy', asset: '현대차', qty: 9, amount: 4600000, broker: '토스증권' }),
-      tx({ type: 'buy', asset: 'TIGER 미국S&P500', qty: 79, amount: 1900000, broker: '토스증권' }),
-      tx({ type: 'sell', asset: '현대차', qty: 9, amount: 7100000, broker: '토스증권', memo: '매도금액은 추정치예요 (이체 200만 + 남은 돈 500만 + 첫 매수 때 넘친 10만). 실제 금액으로 고쳐 주세요.' }),
-      tx({ type: 'withdraw', amount: 2000000, memo: '내 증권 계좌로 이체' }),
-      tx({ type: 'buy', date: '2026-05-29', asset: 'TIGER 미국S&P500', qty: 73, amount: 2000000, broker: '미래에셋' }),
-      tx({ type: 'buy', date: '2026-06-02', asset: 'RISE 미국테크100데일리고정커버드콜', qty: 239, amount: 2912000, broker: '미래에셋' }),
-    ],
-    meta: { lastBackup: null, fixedSort: 'category', currentPid: pid },
+    fixed: [],
+    portfolios: [],
+    tx: [],
+    meta: { lastBackup: null, fixedSort: 'category', currentPid: null },
   };
 }
 
@@ -60,7 +44,7 @@ function load() {
   try {
     const raw = localStorage.getItem(STORAGE_KEY);
     if (raw) return normalize(JSON.parse(raw));
-  } catch (e) { /* 손상된 데이터면 예시로 시작 */ }
+  } catch (e) { /* 손상된 데이터면 빈 상태로 시작 */ }
   return seedData();
 }
 function normalize(d) {
@@ -566,8 +550,8 @@ $('#category-add').addEventListener('submit', (e) => {
   e.target.reset(); save(); renderAll(); toast('카테고리를 추가했어요');
 });
 $('#btn-reset').addEventListener('click', () => {
-  if (!confirm('지금 데이터를 모두 지우고 처음 예시 데이터로 되돌릴까요?\n필요하면 먼저 백업 파일을 저장하세요.')) return;
-  state = seedData(); save(); renderAll(); toast('예시 데이터로 되돌렸어요');
+  if (!confirm('지금 데이터를 모두 지우고 빈 상태로 되돌릴까요?\n필요하면 먼저 백업 파일을 저장하세요.')) return;
+  state = seedData(); save(); renderAll(); toast('초기화했어요');
 });
 
 renderAll();
