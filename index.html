@@ -1,0 +1,128 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>머니메모</title>
+  <meta name="theme-color" content="#2f6fed">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="default">
+  <meta name="apple-mobile-web-app-title" content="머니메모">
+  <link rel="manifest" href="manifest.webmanifest">
+  <link rel="icon" href="icons/icon-192.png">
+  <link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <header class="topbar">
+    <h1 id="page-title">고정비</h1>
+  </header>
+
+  <main>
+    <!-- 고정비 -->
+    <section id="tab-fixed" class="tab active">
+      <div class="hero">
+        <div class="hero-label">한 달 고정비</div>
+        <div class="hero-value" id="fixed-month-total">0원</div>
+        <div class="hero-sub">연간 환산 <strong id="fixed-year-total">0원</strong></div>
+      </div>
+
+      <div class="card">
+        <div class="card-title">카테고리별 비중 <span class="muted small">(월 기준)</span></div>
+        <div id="category-bars"></div>
+      </div>
+
+      <div class="list-head">
+        <span>항목</span>
+        <div class="seg" id="fixed-sort">
+          <button data-sort="category" class="on">카테고리순</button>
+          <button data-sort="amount">금액순</button>
+        </div>
+      </div>
+      <div id="fixed-list"></div>
+      <p class="empty" id="fixed-empty" hidden>아직 항목이 없어요. 아래 + 버튼으로 추가해 보세요.</p>
+    </section>
+
+    <!-- 투자 -->
+    <section id="tab-invest" class="tab">
+      <div class="chips" id="portfolio-chips"></div>
+
+      <div class="hero">
+        <div class="hero-label" id="pf-name">투자</div>
+        <div class="hero-value" id="pf-invested">0원</div>
+        <div class="hero-sub">현재 투자 원금(매수가 기준)</div>
+        <div class="stats" id="pf-stats"></div>
+        <p class="pf-note" id="pf-note"></p>
+      </div>
+
+      <div class="card">
+        <div class="card-title">보유 종목</div>
+        <div id="holdings"></div>
+      </div>
+
+      <div class="list-head"><span>거래 기록</span></div>
+      <div id="tx-list"></div>
+    </section>
+
+    <!-- 설정 -->
+    <section id="tab-settings" class="tab">
+      <div class="card">
+        <div class="card-title">백업과 복원</div>
+        <p class="muted small">데이터는 이 폰 안에만 저장돼요. 폰을 바꾸거나 앱을 지우기 전에 꼭 백업 파일을 저장해 두세요.</p>
+        <p class="small" id="last-backup"></p>
+        <button class="btn primary block" id="btn-export">백업 파일 저장</button>
+        <label class="btn block" for="import-file">백업 파일 불러오기</label>
+        <input type="file" id="import-file" accept="application/json,.json" hidden>
+      </div>
+
+      <div class="card">
+        <div class="card-title">카테고리 관리</div>
+        <div id="category-manage"></div>
+        <form id="category-add" class="inline-form">
+          <input name="name" placeholder="새 카테고리 이름" maxlength="12" required>
+          <button class="btn">추가</button>
+        </form>
+      </div>
+
+      <div class="card">
+        <div class="card-title">투자 묶음 관리</div>
+        <p class="muted small">돈의 출처나 목적별로 따로 굴러가는 모습을 보고 싶을 때 묶음을 나눠요.</p>
+        <div id="portfolio-manage"></div>
+        <button class="btn block" id="btn-add-portfolio">투자 묶음 추가</button>
+      </div>
+
+      <div class="card">
+        <div class="card-title">폰에 앱으로 설치하기</div>
+        <p class="small"><strong>아이폰</strong>: 사파리로 이 페이지를 열고 아래 공유 버튼 → "홈 화면에 추가"</p>
+        <p class="small"><strong>안드로이드</strong>: 크롬 메뉴(⋮) → "홈 화면에 추가" 또는 "앱 설치"</p>
+      </div>
+
+      <div class="card danger-zone">
+        <button class="btn danger block" id="btn-reset">처음 예시 데이터로 되돌리기</button>
+      </div>
+      <p class="muted small center">머니메모 v<span id="app-version"></span></p>
+    </section>
+  </main>
+
+  <button class="fab" id="fab" aria-label="추가">+</button>
+
+  <nav class="tabbar">
+    <button data-tab="fixed" class="on"><span class="ti">🧾</span>고정비</button>
+    <button data-tab="invest"><span class="ti">📈</span>투자</button>
+    <button data-tab="settings"><span class="ti">⚙️</span>설정</button>
+  </nav>
+
+  <!-- 바텀시트 -->
+  <div class="sheet-backdrop" id="sheet-backdrop" hidden></div>
+  <div class="sheet" id="sheet" hidden role="dialog" aria-modal="true">
+    <div class="sheet-handle"></div>
+    <h2 id="sheet-title"></h2>
+    <form id="sheet-form"></form>
+  </div>
+
+  <div class="toast" id="toast" hidden></div>
+
+  <script src="app.js"></script>
+</body>
+</html>
